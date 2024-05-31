@@ -6,6 +6,5 @@ class Province{
     longitude;
     display_order;
 }
-
 export default Province;
   

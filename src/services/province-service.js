@@ -5,23 +5,26 @@ export default class ProvinceService {
 
     getAllAsync = async () => {
         const repo = new ProvinceRepository();
-        const provincesArray = await repo.getAllAsync();
+        const arrayProvincias = await repo.getAllAsync();
+        console.log(arrayProvincias)
         let arrayRes;
-        if (provincesArray != '') {
-            arrayRes = [provincesArray, 200];
+        if (arrayProvincias.length < 0) {
+            arrayRes = ["No hay provincias", 404];
         }
         else {
-            arrayRes = ["No hay provincias", 404];
+            arrayRes = [arrayProvincias, 200];
+            
         }
         return arrayRes;
     }
 
     getByIdAsync = async (id) => {
         const repo = new ProvinceRepository();
-        const provincesArray = await repo.getByIdAsync(id);
+        const provinciaEncontrada = await repo.getByIdAsync(id);
+        console.log(provinciaEncontrada)
         let arrayRes;
-        if (provincesArray != '') {
-            arrayRes = [provincesArray, 200];
+        if (provinciaEncontrada.name != '') {
+            arrayRes = [provinciaEncontrada, 200];
         }
         else {
             arrayRes = ["No se encuentra la provincia", 404];
@@ -47,3 +50,4 @@ export default class ProvinceService {
         return arrayRes;
     }
 }
+

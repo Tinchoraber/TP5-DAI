@@ -1,20 +1,36 @@
-import provinces from '../entities/province';
+import config from '../configs/db-configs.js';
 import pkg from 'pg';
 const { Client, Pool } = pkg;
 
 export default class ProvinceRepository {
     getAllAsync = async () => {
-        let returnArray = provinces
-        return returnArray;
+        const client = new Client(config);
+        await client.connect();
+        let sql = `SELECT * FROM provinces`;
+        let provinces = await client.query(sql);
+        console.log(provinces)
+        await client.end();
+        return provinces;
     }
 
     getByIdAsync = async (id) => {
-        const provinceIndex = provinces.findIndex(province => province.id === id);
-        return provinces[provinceIndex];
+        const client = new Client(config);
+        await client.connect();
+        let sql = `SELECT * FROM provinces WHERE id=$1`;
+        const values = [id];
+        const result = await client.query(sql, values);
+        await client.end();
+        return result;
     }
 
     createAsync = async (body) => {
         try {
+            const client = new Client(config);
+            await client.connect();
+            const sql = `INSERT INTO provinces 
+                            (name, full_name, latitude. longitude, display_order)
+                         VALUES
+                         ($1, $2, $3, $4, $5)`;
             let nombre = ValidacionesHelper.getStringorDefault(body.name);
             let full_nombre = ValidacionesHelper.getStringorDefault(body.full_name);
             let latitud = ValidacionesHelper.getIntegerorDefault(body.latitude);
@@ -33,6 +49,14 @@ export default class ProvinceRepository {
         catch (error) {
             return [error, 404]
         }
+
+        
+        
+        
+        const values = [id];
+        const result = await client.query(sql, values);
+        await client.end();
+        return result;
     }
 
     updateAsync = async (body) => {
