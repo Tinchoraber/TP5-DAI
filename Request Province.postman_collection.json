@@ -86,6 +86,57 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "http://localhost:3000/api/province/5(PUT)",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \r\n  \"name\": \"Provincia del Sol\",\r\n  \"full_name\": \"Provincia del Sol Radiante\",\r\n  \"latitude\": 40.7128,\r\n  \"longitude\": -74.0060,\r\n  \"display_order\": 26\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/province/5",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"province",
+						"5"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "http://localhost:3000/api/province/17",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/province/17",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"province",
+						"17"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }

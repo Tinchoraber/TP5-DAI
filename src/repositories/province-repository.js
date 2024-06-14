@@ -55,7 +55,7 @@ export default class ProvinceRepository {
     updateAsync = async (body) => {
             const client = new Client(config);
             await client.connect();
-            const sql1 = `SELECT id FROM provinces WHERE id = $1`;
+            const sql1 = `SELECT * FROM provinces WHERE id = $1`;
             const values1 = [body.id];
             let resultado1 = await client.query(sql1, values1);
             const sql = `UPDATE provinces
@@ -70,8 +70,8 @@ export default class ProvinceRepository {
             let latitud = validacionesHelper.getIntegerOrDefault(body.latitude);
             let longitud = validacionesHelper.getIntegerOrDefault(body.longitude);
             let display_orden = validacionesHelper.getIntegerOrDefault(body.display_order);
-            const values = [nombre, full_nombre, latitud, longitud, display_orden];
-            const result = await client.query(sql, values); // el error esta aca
+            const values = [nombre, full_nombre, latitud, longitud, display_orden, body.id];
+            const result = await client.query(sql, values); 
             await client.end();
              if (resultado1 < 1) {
                 return ['Not Found', 404];
@@ -85,14 +85,15 @@ export default class ProvinceRepository {
     }
 
     deleteByIdAsync = async (id) => {
-        const index = provinces.findIndex(province => province.id === id);
-        let arrayRes;
-        if (index !== -1) {
-            provinces.splice(index, 1);
-            arrayRes = ["Se pudo eliminar la provincia correctamente", 200]
+        const client = new Client(config);
+        await client.connect();
+        const sql = `DELETE FROM Provinces WHERE id = $1`;
+        const values = [id];
+        let provinciaEliminada = await client.query(sql, values)
+        if (provinciaEliminada < 1) {
+           return ["No se encontro la provincia", 404] 
         } else {
-            arrayRes = ["No se encontro la provincia", 404]
+            return ['OK', 200]
         }
-        return arrayRes;
     }
 }
