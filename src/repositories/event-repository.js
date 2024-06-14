@@ -52,7 +52,7 @@ export default class eventRepository {
     INNER JOIN users U ON E.id_creator_user = U.id
     INNER JOIN event_tags ET ON E.id  = ET.id_event
     INNER JOIN tags T ON ET.id_tag = T.id
-     `;
+    GROUP BY E.id, EL.id, EC.id, L.id, P.id, U.id, ET.id, T.id`;
     let events = await client.query(sql);
     console.log(events);
     await client.end();
