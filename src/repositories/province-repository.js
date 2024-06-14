@@ -1,12 +1,13 @@
 import config from '../configs/db-configs.js';
 import pkg from 'pg';
+import validacionesHelper from '../helpers/validaciones-helper.js';
 const { Client, Pool } = pkg;
 
 export default class ProvinceRepository {
     getAllAsync = async () => {
         const client = new Client(config);
         await client.connect();
-        let sql = `SELECT * FROM provinces`;
+        const sql = `SELECT * FROM provinces`;
         let provinces = await client.query(sql);
         console.log(provinces)
         await client.end();
@@ -16,7 +17,7 @@ export default class ProvinceRepository {
     getByIdAsync = async (id) => {
         const client = new Client(config);
         await client.connect();
-        let sql = `SELECT * FROM provinces WHERE id=$1`;
+        const sql = `SELECT * FROM provinces WHERE id=$1`;
         const values = [id];
         const result = await client.query(sql, values);
         await client.end();
@@ -28,23 +29,18 @@ export default class ProvinceRepository {
             const client = new Client(config);
             await client.connect();
             const sql = `INSERT INTO provinces 
-                            (name, full_name, latitude. longitude, display_order)
+                            (name, full_name, latitude, longitude, display_order)
                          VALUES
                          ($1, $2, $3, $4, $5)`;
-            let nombre = ValidacionesHelper.getStringorDefault(body.name);
-            let full_nombre = ValidacionesHelper.getStringorDefault(body.full_name);
-            let latitud = ValidacionesHelper.getIntegerorDefault(body.latitude);
-            let longitud = ValidacionesHelper.getIntegerorDefault(body.longitude);
-            let display_orden = ValidacionesHelper.getIntegerorDefault(body.display_order);
-            provinces.push({
-                id: (provinces.length + 1),
-                name: nombre,
-                full_name: full_nombre,
-                latitude: latitud,
-                longitude: longitud,
-                display_order: display_orden
-            });
-            return ["Created", 201];
+            let nombre = validacionesHelper.getStringOrDefault(body.name);
+            let full_nombre = validacionesHelper.getStringOrDefault(body.full_name);
+            let latitud = validacionesHelper.getIntegerOrDefault(body.latitude);
+            let longitud = validacionesHelper.getIntegerOrDefault(body.longitude);
+            let display_orden = validacionesHelper.getIntegerOrDefault(body.display_order);
+            const values = [nombre, full_nombre, latitud, longitud, display_orden];
+            const result = await client.query(sql, values);
+            await client.end();
+            return ['Created', 201];
         }
         catch (error) {
             return [error, 404]
@@ -53,36 +49,39 @@ export default class ProvinceRepository {
         
         
         
-        const values = [id];
-        const result = await client.query(sql, values);
-        await client.end();
-        return result;
+       
     }
 
     updateAsync = async (body) => {
-        let arrayRes = "";
-        const crUpdateAsync = ValidacionesHelper.getIntegerorDefault(body.id)
-        const index = provinces.findIndex(province => province.id === entity.id);
-        if (index != -1) {
-            if (body.name == "" || body.name.length <= 3) {
-                arrayRes = ["Error, no cumple las condiciones", 400]
+            const client = new Client(config);
+            await client.connect();
+            const sql1 = `SELECT id FROM provinces WHERE id = $1`;
+            const values1 = [body.id];
+            let resultado1 = await client.query(sql1, values1);
+            const sql = `UPDATE provinces
+                        SET name = $1, 
+                        full_name = $2, 
+                        latitude = $3, 
+                        longitude = $4, 
+                        display_order = $5
+                        WHERE id = $6`;
+            let nombre = validacionesHelper.getStringOrDefault(body.name);
+            let full_nombre = validacionesHelper.getStringOrDefault(body.full_name);
+            let latitud = validacionesHelper.getIntegerOrDefault(body.latitude);
+            let longitud = validacionesHelper.getIntegerOrDefault(body.longitude);
+            let display_orden = validacionesHelper.getIntegerOrDefault(body.display_order);
+            const values = [nombre, full_nombre, latitud, longitud, display_orden];
+            const result = await client.query(sql, values); // el error esta aca
+            await client.end();
+             if (resultado1 < 1) {
+                return ['Not Found', 404];
             }
-            else {
-                arrayRes = ["Created", 201];
-                provinces[body.id - 1] =
-                {
-                    id: body.id,
-                    name: body.name,
-                    full_name: body.full_name,
-                    latitude: body.latitude,
-                    longitude: body.longitude,
-                    display_order: body.display_order
-                }
+            else if(!body.name || body.name.length < 3){
+                return ['Bad Request: Nombre inválido', 400]
             }
-        } else {
-            arrayRes = ["No se encontro la provincia", 404]
-        }
-        return arrayRes;
+            else{
+                return ['OK', 200]
+            }
     }
 
     deleteByIdAsync = async (id) => {

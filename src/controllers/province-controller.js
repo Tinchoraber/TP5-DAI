@@ -19,26 +19,27 @@ const svc = new ProvinceService();
         try {
             const province = await svc.getByIdAsync(id);
             console.log(province)
-            res.status(200).json(province[0]);
+            res.status(province[1]).json(province[0]);
         } catch (error) {
             res.status(404).send('Not Found');
         }
     });
 
-    router.post('/api/province', async (req, res) => {
+    router.post('', async (req, res) => {
         const newProvince = req.body;
         try {
             const createdProvince = await svc.createAsync(newProvince);
             res.status(createdProvince[1]).json(createdProvince[0]);
         } catch (error) {
-            res.status(400).json(error);
+            res.status(400).json({error: "Error al insertar la Provincia"});
         }
     });
 
-    router.put('/api/province/:id', async (req, res) => {
+    router.put('/:id', async (req, res) => {
         const id = ValidacionesHelper.getIntegerOrDefault(req.params.id);
+        const provinceToUpdate = req.body;
         try {
-            const updatedProvince = await svc.updateAsync({ id, ...req.body });
+            const updatedProvince = await svc.updateAsync({ id, ...provinceToUpdate });
             res.status(updatedProvince[1]).json(updatedProvince[0]);
         } catch (error) {
             res.status(404).json({ error: "Provincia no encontrada" });

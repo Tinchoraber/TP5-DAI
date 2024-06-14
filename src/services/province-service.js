@@ -9,7 +9,7 @@ export default class ProvinceService {
         console.log(arrayProvincias)
         let arrayRes;
         if (arrayProvincias.length < 0) {
-            arrayRes = ["No hay provincias", 404];
+            arrayRes = ['No hay provincias', 404];
         }
         else {
             arrayRes = [arrayProvincias, 200];
@@ -27,7 +27,7 @@ export default class ProvinceService {
             arrayRes = [provinciaEncontrada, 200];
         }
         else {
-            arrayRes = ["No se encuentra la provincia", 404];
+            arrayRes = ['No se encuentra la provincia', 404];
         }
         return arrayRes;
     }
@@ -38,9 +38,9 @@ export default class ProvinceService {
         return arrayRes;
     }
 
-    updateAsync = async (entity) => {
+    updateAsync = async (body) => {
         const repo = new ProvinceRepository();
-        let arrayRes = await repo.updateAsync(entity);
+        let arrayRes = await repo.updateAsync(body);
         return arrayRes;
     }
 
