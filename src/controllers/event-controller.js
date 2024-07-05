@@ -18,15 +18,25 @@ const svc = new eventService();
     });
 
     //3
-    router.get('', async (req, res) => {
-        
-        res.status(200).send('OK')
-     });
+    router.get('/', async (req, res, next) => {
+      const { offset, limit, name, category, startDate, tag } = req.query;
+      const url = req.originalUrl;
+      
+      eventService
+      .searchEventsAynsc(limit, offset, url, name, category, startDate, tag)
+      .then(user => res.status(200).json(user))
+      .catch(err => next(err));
+      });
      //4)
-     router.get('/api/event/{id}', async (req, res) => {
-        
-        res.status(200).send('OK')
-     });
+     router.get('/:id', async (req, res) => {
+      const id = req.params.id; // Obtener el ID del parámetro de la URL
+      try {
+          const eventoEncontrado = await svc.getEventsByIdAsync(id);
+          res.status(eventoEncontrado[1]).json(eventoEncontrado[0]);
+      } catch (error) {
+          res.status(500).send('Error interno.');
+      }
+  });
 
 
 
