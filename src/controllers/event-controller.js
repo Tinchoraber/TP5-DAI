@@ -27,7 +27,7 @@ const svc = new eventService();
       .then(user => res.status(200).json(user))
       .catch(err => next(err));
       });
-     //4)
+     //4)   
      router.get('/:id', async (req, res) => {
       const id = req.params.id; // Obtener el ID del parámetro de la URL
       try {

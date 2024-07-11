@@ -1,7 +1,7 @@
+//EJ 7
 import { Router } from 'express';
 import ProvinceService from '../services/province-service.js';
 import ValidacionesHelper from '../helpers/validaciones-helper.js';
-
 const router = Router();
 const svc = new ProvinceService();
     router.get('', async (req, res) => {
