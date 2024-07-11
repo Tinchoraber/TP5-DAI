@@ -3,7 +3,7 @@ import cors from "cors";
 import ValidacionesHelper from "./src/helpers/validaciones-helper.js";
 import ProvinceRouter from "./src/controllers/province-controller.js";
 import EventRouter from "./src/controllers/event-controller.js";
-import UserRouter from "./src/controllers/user-controller.js"
+import UserRouter from "./src/controllers/user-controller.js";
 const app = express();
 const port = 3000; // El puerto 3000 (http://localhost:3000)
 // Agrego los Middlewares
