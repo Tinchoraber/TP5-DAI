@@ -71,9 +71,18 @@ export default class eventService{
         return arrayRes;
     }
 
-    insertEventEnrollmentsAsync = async (id, body) => {
-        const repo = new eventEnrollmentRepository();
-        let arrayRes = await repo.insertEventEnrollmentsAsync(id, body);
-        return arrayRes;
+    insertEventEnrollmentsAsync = async (eventId, userId) => {
+        const repo = new eventRepository();
+        return await repo.insertEventEnrollmentsAsync(eventId, userId);
+    }
+
+    // Método para eliminar la inscripción a un evento
+    deleteEventEnrollmentAsync = async (eventId, userId) => {
+        const repo = new eventRepository();
+        return await repo.deleteEventEnrollmentsAsync(eventId, userId);
+    }
+    valorarEventEnrollmentAsync = async (eventId, userId, rating) => {
+        const repo = new eventRepository();
+        return await repo.valorarEventEnrollmentsAsync(eventId, userId, rating);
     }
 }

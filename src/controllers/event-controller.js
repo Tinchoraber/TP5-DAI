@@ -4,21 +4,27 @@ import eventService from '../services/event-service.js';
 import jwt from 'jsonwebtoken';
 const router = Router();
 const svc = new eventService();
-const verifyToken = (req, res, next) => {
-    const secretKey = 'ClaveSuperSecreta2006$';
+  const verifyToken = (req, res, next) => {
     const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
-    if (!token) {
-      return res.status(403).json({ message: 'Token requerido' });
+    
+    if (token == null) {
+      console.log('No token provided');
+      return res.sendStatus(401); // No token provided
     }
-    jwt.verify(token, secretKey, (err, decoded) => {
+    
+    const secretKey = process.env.ACCESS_TOKEN_SECRET || 'ClaveSuperSecreta2006$';
+    jwt.verify(token, secretKey, (err, user) => {
       if (err) {
-        return res.status(401).send('Unauthorized');
+        console.log('Token verification failed', err);
+        return res.sendStatus(403); // Invalid token
       }
-      req.user = decoded;
+      
+      console.log('Token verified successfully', user);
+      req.user = user; // Store user information in request
       next();
     });
-  }
+  };
    //2
    router.get('', async (req, res) => {
       try {
@@ -100,10 +106,55 @@ const verifyToken = (req, res, next) => {
   });
 
   //9)
-  router.post('/:id/enrollment/', verifyToken, async (req, res) => {
+  router.post('/:id/enrollment', verifyToken, async (req, res) => {
     const id = req.params.id;
-    const header = req.header;
-    const returnArray = await svc.insertEventEnrollmentsAsync(id, header);
-      res.status(returnArray[1]).json(returnArray[0]);
-    });
+    const getId = svc.getEventsByIdAsync(id);
+    if (!getId) {
+        res.status(404).send('Evento no encontrado');
+        return;
+    }
+    const result = await svc.insertEventEnrollmentsAsync(id, req.user.id);
+    if (result) {
+        res.status(201).send();
+    }
+    else {
+        res.status(400).send('Ya no hay cupos disponibles');
+    }
+})
+
+router.delete('/:id/enrollment', verifyToken, async (req, res) => {
+    const id = req.params.id;
+    const result = await svc.deleteEventEnrollmentAsync(id, req.user.id);
+    if (result == 200) {
+        res.status(200).send();
+    }
+    else if (result == 404) {
+        res.status(404).send('Inscripción o evento no encontrado');
+    }
+    else {
+        res.status(400).send('El evento ya ha pasado');
+    }
+});
+//10)
+router.patch('/:id/enrollment/:rating', verifyToken, async (req, res) => {
+    const id = req.params.id;
+    const getId = svc.getEventsByIdAsync(id);
+    if (!getId) {
+        res.status(404).send('Evento no encontrado');
+        return;
+    }
+    const rating = ValidacionesHelper.getIntegerOrDefault(req.params.rating);
+    if (rating < 1 || rating > 10) {
+        res.status(400).send('La calificación debe ser un número entero entre 1 y 10');
+        return;
+    }
+    const result = await svc.valorarEventEnrollmentAsync(id, req.user.id, rating);
+    if (result) {
+        res.status(200).send();
+    }
+    else {
+        res.status(400).send('Error en las reglas del negocio');
+    }
+});
+
 export default router;

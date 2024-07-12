@@ -1,0 +1,40 @@
+{
+	"info": {
+		"_postman_id": "f2123381-398f-41d0-b6a2-d80f36cf9cc8",
+		"name": "Request Event Locations",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33640419"
+	},
+	"item": [
+		{
+			"name": "http://localhost:3000/api/event-location(GET)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MjA4MjA3Njl9.0X3nsc6jmUSp8mYTgSHwwQwL_At8Df2mQjzkpvj_T84",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/event-location",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"event-location"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
