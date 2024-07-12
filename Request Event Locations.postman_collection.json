@@ -35,6 +35,37 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "http://localhost:3000/api/event-location/1(GET)",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MjA4MjA3Njl9.0X3nsc6jmUSp8mYTgSHwwQwL_At8Df2mQjzkpvj_T84",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/event-location/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"event-location",
+						"1"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
