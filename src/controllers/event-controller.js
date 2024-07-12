@@ -7,12 +7,10 @@ const svc = new eventService();
    //2
    router.get('', async (req, res) => {
       try {
-         console.log('entro')
          const returnArray = await svc.getAllEventsAsync();
          console.log(returnArray)
          res.status(200).json(returnArray[0]);
      } catch (error) {
-      console.log('entro5')
          res.status(500).send('Error interno.');
      }
     });
