@@ -45,11 +45,6 @@ export default class ProvinceRepository {
         catch (error) {
             return [error, 404]
         }
-
-        
-        
-        
-       
     }
 
     updateAsync = async (body) => {

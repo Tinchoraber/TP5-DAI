@@ -19,6 +19,7 @@ class ValidacionesHelper {
     getStringOrDefault = (value, defaultValue) => {
         return value || defaultValue;
     };
+    
 }
 // Exporto todo lo que yo quiero exponer del módulo:
 export default new ValidacionesHelper();

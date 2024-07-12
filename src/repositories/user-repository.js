@@ -27,7 +27,7 @@ export default class userRepository {
                 token: ""
             }, 400];
         }
-        else if(result.rows.length == 0){
+        else if(result.rowCount == 0){
             return [{
                 success: false,
                 message: "Usuario o clave invalida.",
