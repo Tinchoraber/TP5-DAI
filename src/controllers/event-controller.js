@@ -50,6 +50,123 @@ const svc = new eventService();
       }
   });
 
+  router.get('/:id/enrollment', async (req, res) => {
+    const id = getInteger(req.params.id);
+    if (id === null) {
+        res.status(400).send('El id de evento debe ser un número entero');
+        return;
+    }
+    const firstName = getString(req.query.first_name);
+    const lastName = getString(req.query.last_name);
+    const username = getString(req.query.username);
+    const attended = getBoolean(req.query.attended);
+    const rating = getInteger(req.query.rating);
+    const result = await eventService.getEnrollments(id, firstName, lastName, username, attended, rating);
+    if (result) {
+        res.status(200).send(result);
+    }
+    else {
+        res.status(404).send('No se encontraron inscripciones que cumplan con los criterios de búsqueda');
+    }
+});
+
+router.post('/', verifyToken, async (req, res) => {
+    const result = await eventService.createAsync(req.body, req.user.id);
+    if (result) {
+        res.status(201).send();
+    }
+    else {
+        res.status(500).send('Error en las reglas del negocio');
+    }
+});
+
+router.put('/', verifyToken, async (req, res) => {
+    const result = await eventService.updateAsync(req.body, req.user.id);
+    if (result) {
+        res.status(200).send();
+    }
+    else {
+        res.status(400).send('Error en las reglas del negocio');
+    }
+});
+
+router.delete('/:id', verifyToken, async (req, res) => {
+    const id = getInteger(req.params.id);
+    if (id === null) {
+        res.status(400).send('El id de evento debe ser un número entero');
+        return;
+    }
+    const result = await eventService.deleteAsync(id, req.user.id);
+    if (result) {
+        res.status(200).send();
+    }
+    else {
+        res.status(400).send('Error en las reglas del negocio');
+    }
+});
+
+router.post('/:id/enrollment', verifyToken, async (req, res) => {
+    const id = getInteger(req.params.id);
+    if (id === null) {
+        res.status(400).send('El id de evento debe ser un número entero');
+        return;
+    }
+    const getId = eventService.getById(id);
+    if (!getId) {
+        res.status(404).send('Evento no encontrado');
+        return;
+    }
+    const result = await eventService.enrollAsync(id, req.user.id);
+    if (result) {
+        res.status(201).send();
+    }
+    else {
+        res.status(400).send('Ya no hay cupos disponibles');
+    }
+})
+
+router.delete('/:id/enrollment', verifyToken, async (req, res) => {
+    const id = getInteger(req.params.id);
+    if (id === null) {
+        res.status(400).send('El id de evento debe ser un número entero');
+        return;
+    }
+    const result = await eventService.unenrollAsync(id, req.user.id);
+    if (result == 200) {
+        res.status(200).send();
+    }
+    else if (result == 404) {
+        res.status(404).send('Inscripción o evento no encontrado');
+    }
+    else {
+        res.status(400).send('El evento ya ha pasado');
+    }
+});
+
+router.patch('/:id/enrollment/:rating', verifyToken, async (req, res) => {
+    const id = getInteger(req.params.id);
+    if (id === null) {
+        res.status(400).send('El id de evento debe ser un número entero');
+        return;
+    }
+    const getId = eventService.getById(id);
+    if (!getId) {
+        res.status(404).send('Evento no encontrado');
+        return;
+    }
+    const rating = getInteger(req.params.rating);
+    if (rating < 1 || rating > 10) {
+        res.status(400).send('La calificación debe ser un número entero entre 1 y 10');
+        return;
+    }
+    const result = await eventService.rateAsync(id, req.user.id, rating);
+    if (result) {
+        res.status(200).send();
+    }
+    else {
+        res.status(400).send('Error en las reglas del negocio');
+    }
+});
 
 
 
