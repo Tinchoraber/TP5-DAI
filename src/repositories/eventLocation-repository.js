@@ -17,4 +17,19 @@ export default class EventLocationRepository {
             return [locations, 200];
         }
 }
+
+getAllEventsLocationsByIdAsync = async (id) => {
+    const client = new Client(config);
+    await client.connect();
+    const sql = `SELECT * FROM event_locations WHERE id = $1`;
+    const values = [id]
+    let event_locations = await client.query(sql, values);
+    await client.end();
+    if(event_locations.rowCount == 0){
+        return ['NOT FOUND', 404];
+    }
+    else{
+        return [event_locations, 200];
+    }
+}
 }

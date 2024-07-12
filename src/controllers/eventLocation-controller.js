@@ -30,4 +30,10 @@ const verifyToken = (req, res, next) => {
     res.status(returnArray[1]).json(returnArray[0]);
   });
 
+  router.get('/id', verifyToken, async (req, res) => {
+    const id = req.params.id
+    const returnArray = await svc.getAllEventsLocationsByIdAsync(id);
+    res.status(returnArray[1]).json(returnArray[0]);
+  });
+
 export default router;
