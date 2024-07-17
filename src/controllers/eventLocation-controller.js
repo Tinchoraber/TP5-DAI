@@ -36,4 +36,22 @@ const verifyToken = (req, res, next) => {
     res.status(returnArray[1]).json(returnArray[0]);
   });
 
+  router.post('', verifyToken, async (req, res) => {
+    const body = req.body;
+    const returnArray = await svc.insertEventsLocationsAsync(body);
+    res.status(returnArray[1]).json(returnArray[0]);
+  });
+
+  router.put('', verifyToken, async (req, res) => {
+    const body = req.body;
+    const returnArray = await svc.updateEventsLocationsAsync(body);
+    res.status(returnArray[1]).json(returnArray[0]);
+  });
+
+  router.delete('/id', verifyToken, async (req, res) => {
+    const id = req.params.id
+    const returnArray = await svc.deleteEventsLocationsByIdAsync(id);
+    res.status(returnArray[1]).json(returnArray[0]);
+  });
+
 export default router;
