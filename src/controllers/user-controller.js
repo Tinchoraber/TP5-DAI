@@ -5,6 +5,7 @@ const router = Router();
 const svc = new userService();
 router.post('/login', async (req, res) => {
     const infoSesion = req.body
+    console.log('info', infoSesion)
     const login = await svc.loginAsync(infoSesion);
     res.status(login[1]).json(login[0]);
 });

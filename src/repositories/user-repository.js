@@ -7,8 +7,8 @@ export default class userRepository {
     loginAsync = async (body) => {
         const client = new Client(config);
         await client.connect();
-        let username = body.username;
-        let password = body.password;
+        let username = body.email;
+        let password = body.contraseña;
         const sql = `SELECT * FROM users WHERE username = $1 and password = $2`;
         const values = [username, password];
         const result = await client.query(sql, values);
@@ -39,7 +39,7 @@ export default class userRepository {
             }, 400];
         } else {
             return [{
-                success: true,
+                result: result.rows[0],
                 message: "Inicio de sesión exitoso.",
                 token: token
             }, 200];
