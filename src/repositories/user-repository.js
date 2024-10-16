@@ -49,10 +49,11 @@ export default class userRepository {
     registerAsync = async (body) => {
         const client = new Client(config);
         await client.connect();
-        let first_name = body.first_name;
-        let last_name = body.last_name;
-        let username = body.username;
-        let password = body.password;
+        console.log(body)
+        let first_name = body.nombre;
+        let last_name = body.apellido;
+        let username = body.email;
+        let password = body.contraseña;
         const sql = `INSERT INTO users(first_name, last_name, username, password)
         VALUES($1, $2, $3, $4)`;
         const values = [first_name, last_name, username, password];

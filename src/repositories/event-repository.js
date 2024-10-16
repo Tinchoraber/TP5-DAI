@@ -46,7 +46,7 @@ export default class eventRepository {
     let events = await client.query(sql);
     console.log(events);
     await client.end();
-    return events;
+    return events.rows;
   };
   searchEventAsync = async(limit, offset, eventName, eventCategory, eventDate, eventTag) =>{
     let returnArray = null;
