@@ -6,7 +6,7 @@ export default class eventRepository {
   getAllEventsAsync = async () => {
     const client = new Client(config);
     await client.connect();
-    const sql = `SELECT e.id, e.name, e.description, e.start_date, e.duration_in_minutes, e.price, e.enabled_for_enrollment, e.max_assistance, 
+    const sql = `SELECT e.id, e.name, e.description, e.start_date, e.duration_in_minutes, e.price, e.enabled_for_enrollment, e.imagen, e.max_assistance, 
     json_build_object(
         'id', el.id, 
         'name', el.name, 
@@ -67,6 +67,7 @@ export default class eventRepository {
         e.duration_in_minutes,
         e.price,
         e.enabled_for_enrollment,
+        e.imagen,
         e.max_assistance,
         array(select name from tags t2 left join event_tags et2 on t2.id = et2.id_tag where et2.id_event = e.id ) AS tags,
         json_build_object(
@@ -120,6 +121,7 @@ export default class eventRepository {
                         e.duration_in_minutes,
                         e.price,
                         e.enabled_for_enrollment,
+                        e.imagen,
                         e.max_assistance,
                         array(select name from tags t2 left join event_tags et2 on t2.id = et2.id_tag where et2.id_event = e.id ) AS tags,
                         json_build_object(
@@ -236,9 +238,9 @@ export default class eventRepository {
                 const sql = 'SELECT max_capacity from event_locations';
                 const maximaCapacidad = await client.query(sql)
                 const sql2 = `INSERT INTO events 
-                                (name, description, id_event_category, id_event_location, start_date, duration_in_minutes, price, max_assistance, id_creator_user, enabled_for_enrollment)
+                                (name, description, id_event_category, id_event_location, start_date, duration_in_minutes, price, max_assistance, id_creator_user, enabled_for_enrollment, e.imagen)
                              VALUES
-                             ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`;
+                             ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`;
                 let nombre = body.name;
                 let descripcion = body.description;
                 let id_evento_categoria = body.id_event_category;
@@ -249,7 +251,8 @@ export default class eventRepository {
                 let maxima_asistencia = body.max_assistance;
                 let id_creador_user = body.id_creator_user;
                 let enabled_para_enrollment = body.enabled_for_enrollment;
-                const values = [nombre, descripcion, id_evento_categoria, id_evento_locacion, fechaQueEmpieza, duracion_en_minutos, precio, maxima_asistencia, id_creador_user, enabled_para_enrollment];
+                let imagen = body.imagen;
+                const values = [nombre, descripcion, id_evento_categoria, id_evento_locacion, fechaQueEmpieza, duracion_en_minutos, precio, maxima_asistencia, id_creador_user, enabled_para_enrollment, imagen];
                 const result = await client.query(sql2, values);
                 await client.end();
             if(nombre < 3 || descripcion < 3){
@@ -271,7 +274,7 @@ export default class eventRepository {
             const sql = 'SELECT max_capacity from event_locations';
             const maximaCapacidad = await client.query(sql)
             const sql2 = `UPDATE events 
-                            SET name = $1, description = $2, id_event_category =  $3, id_event_location = $4, start_date = $5, duration_in_minutes = $6, price = $7, max_assistance = $8, enabled_for_enrollment = $9 WHERE id = $10 AND id_creator_user = $11`;
+                            SET name = $1, description = $2, id_event_category =  $3, id_event_location = $4, start_date = $5, duration_in_minutes = $6, price = $7, max_assistance = $8, enabled_for_enrollment = $9, imagen = $10 WHERE id = $11 AND id_creator_user = $12`;
             let id = body.id
             let nombre = body.name;
             let descripcion = body.description;
@@ -283,7 +286,8 @@ export default class eventRepository {
             let maxima_asistencia = body.max_assistance;
             let id_creador_user = body.id_creator_user;
             let enabled_para_enrollment = body.enabled_for_enrollment;
-            const values = [nombre, descripcion, id_evento_categoria, id_evento_locacion, fechaQueEmpieza, duracion_en_minutos, precio, maxima_asistencia, enabled_para_enrollment, id, id_creador_user];
+            let imagen = body.imagen;
+            const values = [nombre, descripcion, id_evento_categoria, id_evento_locacion, fechaQueEmpieza, duracion_en_minutos, precio, maxima_asistencia, enabled_para_enrollment, imagen, id, id_creador_user];
             console.log(values)
             const result = await client.query(sql2, values);
             console.log(result)
